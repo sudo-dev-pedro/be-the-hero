@@ -7,24 +7,24 @@
     box-sizing: border-box;
 }
 
-html, body, #root{
+html, body, #root {
     height: 100%;
 }
 
-body{
+body {
     font: 400 14px Public Sans, sans-serif; 
     background: #f0f0f5;
 }
 
-textarea, input, button{
+textarea, input, button {
     font: 400 18px Public Sans, sans-serif; 
 }
 
-button{
+button {
     cursor: pointer;
 }
 
-form input{
+form input {
     width: 100%;
     height: 60px;
     color: #333;
@@ -33,7 +33,20 @@ form input{
     padding: 0 24px;
 }
 
-.button{
+form textarea {
+    width: 100%;
+    /* Meu textarea só pode ser ajustado no sentido vertical */
+    resize: vertical;
+    min-height: 140px;
+    height: 60px;
+    color: #333;
+    border: 1px solid #dcdce6;
+    border-radius: 8px;
+    padding: 16px 24px;
+    line-height: 24px;
+}
+
+.button {
     width: 100%;
     height: 60px;
     background: #E02041;
@@ -50,7 +63,7 @@ form input{
     transition: filter 0.2s;
 }
 
-.button:hover{
+.button:hover {
     filter: brightness(85%);
 }
 

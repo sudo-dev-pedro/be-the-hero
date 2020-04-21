@@ -10,6 +10,8 @@ import logo from '../../assets/logo.svg';
 
 export default function Profile() {
     
+    const ongNome = localStorage.getItem('ongNome');
+
     return(
 
         <div className="profile-container">
@@ -20,7 +22,7 @@ export default function Profile() {
                     alt="Be The Hero" 
                 />
 
-                <span>Bem vinda, ONG</span>
+                <span>Bem vindo(a), {ongNome} </span>
 
                 <Link 
                     className="button" 

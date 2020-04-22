@@ -1,8 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-
-import { FiPower } from 'react-icons/fi';
-import { FiTrash2 } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { FiPower, FiTrash2 } from 'react-icons/fi';
+import api from '../../services/api';
 
 import './style.css';
 
@@ -10,7 +9,47 @@ import logo from '../../assets/logo.svg';
 
 export default function Profile() {
     
+    const [casos, setCasos] = useState([]);
+
+    const ongId = localStorage.getItem('ongId');
     const ongNome = localStorage.getItem('ongNome');
+
+    const history = useHistory();
+
+    //Terei uma funcao sendo executada uma única vez
+    useEffect(() => {
+        api.get('perfil', {
+            headers: {
+                Authorization: ongId,
+            }
+        }).then(response => {
+            setCasos(response.data);
+        })
+    }, [ongId]);
+
+    async function deletarCaso(id) {
+
+        try {
+
+            await api.delete(`casos/${id}`, {
+                headers: {
+                    Authorization: ongId,
+                }
+            });
+
+            alert('Caso deletado com sucesso!');
+            setCasos(casos.filter(caso => caso.id !== id));
+
+        }catch(err) {
+            alert('Erro ao deletar caso! Tente novamente.');
+        }
+    }
+
+    async function deslogar() {
+        localStorage.clear();
+
+        history.push('/');
+    }
 
     return(
 
@@ -18,7 +57,7 @@ export default function Profile() {
             <header>
 
                 <img 
-                    src={logo} 
+                    src={logo}
                     alt="Be The Hero" 
                 />
 
@@ -29,7 +68,7 @@ export default function Profile() {
                     to="/caso/novo">Cadastar novo caso
                 </Link>
                 
-                <button type="button">
+                <button onClick={deslogar} type="button">
                     <FiPower 
                         size={18} 
                         color="#E02041" 
@@ -41,77 +80,35 @@ export default function Profile() {
             <h1>Casos cadastrados</h1>
 
             <ul>
-                <li>
-                    <strong>CASO: </strong>
-                    <p>Teste</p>
+                {casos.map(caso =>(
 
-                    <strong>DESCRICAO: </strong>
-                    <p>Teste</p>
+                    <li key={caso.id}>
+                        <strong>CASO: </strong>
+                        <p>{caso.titulo}</p>
 
-                    <strong>VALOR: </strong>
-                    <p>R$ 120,00</p>
+                        <strong>DESCRICAO: </strong>
+                        <p>{caso.descricao}</p>
 
-                    <button className="" type="button">
-                        <FiTrash2 
-                            size={20} 
-                            color="a8a8b3"
-                        />
-                    </button>
-                </li>
+                        <strong>VALOR: </strong>
+                        <p>
+                            {Intl.NumberFormat('PT-BR', 
+                                {
+                                    style: 'currency', 
+                                    currency: 'BRL'
+                                }
+                                ).format(caso.valor)}
+                        </p>
 
-                <li>
-                    <strong>CASO: </strong>
-                    <p>Teste</p>
+                        <button onClick={() => deletarCaso(caso.id)} type="button">
+                            <FiTrash2 
+                                size={20} 
+                                color="a8a8b3"
+                            />
+                        </button>
 
-                    <strong>DESCRICAO: </strong>
-                    <p>Teste</p>
+                    </li>
 
-                    <strong>VALOR: </strong>
-                    <p>R$ 120,00</p>
-
-                    <button className="" type="button">
-                        <FiTrash2 
-                            size={20} 
-                            color="a8a8b3"
-                        />
-                    </button>
-                </li>
-
-                <li>
-                    <strong>CASO: </strong>
-                    <p>Teste</p>
-
-                    <strong>DESCRICAO: </strong>
-                    <p>Teste</p>
-
-                    <strong>VALOR: </strong>
-                    <p>R$ 120,00</p>
-
-                    <button className="" type="button">
-                        <FiTrash2 
-                            size={20} 
-                            color="a8a8b3"
-                        />
-                    </button>
-                </li>
-                
-                <li>
-                    <strong>CASO: </strong>
-                    <p>Teste</p>
-
-                    <strong>DESCRICAO: </strong>
-                    <p>Teste</p>
-
-                    <strong>VALOR: </strong>
-                    <p>R$ 120,00</p>
-
-                    <button className="" type="button">
-                        <FiTrash2 
-                            size={20} 
-                            color="a8a8b3"
-                        />
-                    </button>
-                </li>
+                ))}
 
             </ul>
 

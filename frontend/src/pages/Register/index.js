@@ -30,8 +30,6 @@ export default function Register() {
             UF,
         };
 
-        console.log(data);
-
         try {
 
             const response = await api.post('ongs', data);
